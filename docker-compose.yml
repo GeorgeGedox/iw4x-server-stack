@@ -25,3 +25,14 @@ services:
       - ./admin:/app
     ports:
       - "1624:1624"
+
+  scp_server:
+    image: eeacms/scp-server
+    environment:
+      DATADIR: /data
+      USERID: 1000
+      GROUPID: 1000
+    ports:
+      - "2280:22"
+    volumes:
+      - ./server:/data
