@@ -28,6 +28,7 @@ services:
 
   scp_server:
     image: eeacms/scp-server
+    container_name: scp_server
     environment:
       DATADIR: /data
       USERID: 1000
