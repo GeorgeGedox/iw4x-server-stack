@@ -1,0 +1,31 @@
+FROM alpine:3.8
+ENV LANG en_US.utf8
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN echo "x86" > /etc/apk/arch &&\
+    apk add --no-cache wine &&\
+    echo "x86_64" > /etc/apk/arch
+
+RUN addgroup -g ${GROUP_ID} iw4x
+RUN adduser -h "/server" -G iw4x -D -u ${USER_ID} iw4x
+
+RUN mkdir -p /server
+RUN chown iw4x:iw4x /server
+
+ENV WINEARCH win32
+ENV IW4X_PORT 28960
+ENV IW4X_ARGS -dedicated +set net_port ${IW4X_PORT} +exec server.cfg +party_enable 0 +sv_maxclients 12 +map_rotate
+
+USER iw4x
+WORKDIR /server
+
+VOLUME ["/server"]
+
+EXPOSE ${IW4X_PORT}/udp
+EXPOSE ${IW4X_PORT}
+
+COPY ./init_server.sh /init.sh
+
+CMD ["/bin/sh", "/init.sh"]

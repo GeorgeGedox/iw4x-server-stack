@@ -1,0 +1,18 @@
+FROM ubuntu:22.04
+ENV LANG en_US.utf8
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN apt-get update && \
+    apt-get install -y aspnetcore-runtime-6.0 wget
+
+RUN addgroup --gid ${GROUP_ID} iw4x
+RUN adduser --home "/app" --uid ${USER_ID} --gid ${GROUP_ID} iw4x
+
+USER iw4x
+WORKDIR /app
+
+COPY ./init_admin.sh /init.sh
+
+CMD ["/bin/bash", "/init.sh"]
